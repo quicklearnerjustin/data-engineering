@@ -1,0 +1,38 @@
+import sys, os, inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
+sys.path.insert(0, os.path.join(parentdir, 'stencil'))
+from test_framework import generic_test
+
+
+def buy_and_sell_stock_once(prices):
+    '''make sure the second price is larger than the first'''
+    '''if the difference is positive, always move the second price to the right and update the largest profit'''
+    '''if the difference is negative, move the first one to that positon and move the second one to its right'''
+    i=0
+    profit=0
+    for j in range(i+1,len(prices)):
+        if prices[j]<=prices[i]:
+            i=j
+            j+=1
+        else:
+            if prices[j]-prices[i]>profit:
+                profit=prices[j]-prices[i]
+                j+=1    
+    return profit
+buy_and_sell_stock_once([10,5,15,6,8,5,14])
+
+
+def test_buy_and_sell_stock_once():
+    assert buy_and_sell_stock_once([10,10,10])==0,"there is no profit"
+    assert buy_and_sell_stock_once([10,9,8,5])==0,"there is no profit"
+    assert buy_and_sell_stock_once([10,5,15,6,8,5,14])==10,"buy @5 and sell @15,the profit is 10"
+    assert buy_and_sell_stock_once([15,20,5,3,10,12,2,8])==9,"buy @3 and sell @12,the profit is 9"
+test_buy_and_sell_stock_once()
+
+
+if __name__ == '__main__':
+    generic_test.generic_test_main("buy_and_sell_stock.py",
+                                   "buy_and_sell_stock.tsv",
+                                   buy_and_sell_stock_once)
